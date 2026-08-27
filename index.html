@@ -1,10 +1,16 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Перукуа — Голос Матери Земли. Современный редизайн официального сайта.">
   <title>Перукуа — Голос Матери Земли (Redesign Concept)</title>
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -26,7 +32,13 @@
         <li><a href="#music" class="nav-link">Музыка</a></li>
         <li><a href="#events" class="nav-link">События</a></li>
       </ul>
-      <button class="nav-cta">Присоединиться</button>
+      <div class="nav-actions">
+        <button class="theme-toggle-btn" id="themeToggle" aria-label="Переключить тему">
+          <span class="theme-icon">☀️</span>
+          <span class="theme-label">Светлая</span>
+        </button>
+        <button class="nav-cta">Присоединиться</button>
+      </div>
     </div>
   </header>
 
@@ -194,6 +206,37 @@
   </div>
 
   <script>
+    // Theme Switcher Logic
+    const themeToggleBtn = document.getElementById('themeToggle');
+    const themeIcon = themeToggleBtn ? themeToggleBtn.querySelector('.theme-icon') : null;
+    const themeLabel = themeToggleBtn ? themeToggleBtn.querySelector('.theme-label') : null;
+
+    function updateThemeUI(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+      if (themeIcon && themeLabel) {
+        if (theme === 'dark') {
+          themeIcon.textContent = '🌙';
+          themeLabel.textContent = 'Тёмная';
+        } else {
+          themeIcon.textContent = '☀️';
+          themeLabel.textContent = 'Светлая';
+        }
+      }
+    }
+
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    updateThemeUI(currentTheme);
+
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener('click', () => {
+        const activeTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        const newTheme = activeTheme === 'light' ? 'dark' : 'light';
+        updateThemeUI(newTheme);
+      });
+    }
+
+    // Stats drawer logic
     const toggleBtn = document.getElementById('toggleStats');
     const closeBtn = document.getElementById('closeStats');
     const drawer = document.getElementById('statsDrawer');
